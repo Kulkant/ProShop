@@ -90,6 +90,26 @@ export const payOrder = createAsyncThunk(
   }
 );
 
+export const listMyOrders = createAsyncThunk(
+  "order/listMyOrders",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const { data } = await axios.get(
+        `http://localhost:5001/api/order/myorders`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data?.message);
+    }
+  }
+);
+
 const orderSlice = createSlice({
   name: "order",
   initialState: {
@@ -99,6 +119,7 @@ const orderSlice = createSlice({
     error: null,
     successPay: false,
     loadingPay: false,
+    orders: [],
   },
   reducers: {
     resetOrder: (state) => {
@@ -145,6 +166,20 @@ const orderSlice = createSlice({
 
     builder.addCase(payOrder.rejected, (state, action) => {
       (state.loadingPay = false), (state.error = action.payload);
+    });
+
+    builder.addCase(listMyOrders.pending, (state, action) => {
+      state.loading = true;
+    });
+
+    builder.addCase(listMyOrders.fulfilled, (state, action) => {
+      state.loading = false;
+      state.orders = action.payload;
+    });
+
+    builder.addCase(listMyOrders.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
     });
   },
 });
