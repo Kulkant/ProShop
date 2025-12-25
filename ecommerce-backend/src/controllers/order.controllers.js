@@ -76,7 +76,7 @@ export const updateOrderToPaid = async (req, res) => {
 
 export const getMyOrders = async (req, res) => {
   try {
-    const orders = await Order.findById({ user: req.user._id }).sort({
+    const orders = await Order.find({ user: req.user.id }).sort({
       createdAt: -1,
     });
     res.json(orders);
