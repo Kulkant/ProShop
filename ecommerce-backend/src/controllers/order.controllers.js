@@ -73,3 +73,14 @@ export const updateOrderToPaid = async (req, res) => {
     return res.status(404).json({ message: "Order not found!" });
   }
 };
+
+export const getMyOrders = async (req, res) => {
+  try {
+    const orders = await Order.findById({ user: req.user._id });
+    res.json(orders);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: error.message || "Problem in fetching your users" });
+  }
+};
