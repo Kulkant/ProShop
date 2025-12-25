@@ -1,24 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const token = localStorage.getItem("token");
+
+const config = {
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  },
+};
+
 export const createOrder = createAsyncThunk(
   "order/createOrder",
   async (order, { getState, rejectWithValue }) => {
     try {
-      //auth state se token niklenge
-      const { auth } = getState();
-      const token = localStorage.getItem("token");
-
       if (!token) {
         return rejectWithValue(`No token found , please login!`);
       }
-
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
 
       if (!token) {
         return rejectWithValue(
@@ -41,18 +39,10 @@ export const createOrder = createAsyncThunk(
 export const getOrderDetails = createAsyncThunk(
   "/order/getOrderDetails",
   async (id, { rejectWithValue }) => {
-    const token = localStorage.getItem("token");
-
     if (!token) {
       return rejectWithValue(`No token found , please login!`);
     }
 
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    };
     try {
       const response = await axios.get(
         `http://localhost:5001/api/order/${id}`,
@@ -69,13 +59,6 @@ export const payOrder = createAsyncThunk(
   "/order/payOrder",
   async ({ orderId, paymentResult }, { getState, rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
       console.log("Sending Pay Request for ID:", orderId);
 
       const { data } = axios.put(
@@ -94,14 +77,9 @@ export const listMyOrders = createAsyncThunk(
   "order/listMyOrders",
   async (_, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
       const { data } = await axios.get(
         `http://localhost:5001/api/order/myorders`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        config
       );
       return data;
     } catch (error) {
