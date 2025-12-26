@@ -20,7 +20,8 @@ export const getUserProfile = createAsyncThunk(
           },
         }
       );
-      return data.user;
+
+      return data;
     } catch (error) {
       return rejectWithValue(error.response.data.message);
     }

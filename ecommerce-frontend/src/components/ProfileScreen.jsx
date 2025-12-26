@@ -39,8 +39,6 @@ const ProfileScreen = () => {
     }
   };
 
-  // console.log(orders);
-
   return (
     <Row>
       <Col md={3}>
@@ -51,7 +49,7 @@ const ProfileScreen = () => {
             <Form.Label>Name</Form.Label>
             <Form.Control
               type="text"
-              placeholder={name}
+              placeholder="Enter Email"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
@@ -60,7 +58,7 @@ const ProfileScreen = () => {
             <Form.Label>Email address</Form.Label>
             <Form.Control
               type="email"
-              placeholder="Enter email"
+              placeholder="Enter Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
