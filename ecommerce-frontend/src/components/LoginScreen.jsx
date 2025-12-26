@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { login } from "../app/slices/authSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Card, Button, Form } from "react-bootstrap";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -41,32 +42,36 @@ const LoginScreen = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={onSubmitHandler}>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-    </div>
+    <Card style={{ width: "20rem" }}>
+      <Card.Body>
+        <Card.Title>Login</Card.Title>
+        <Card.Text as="div">
+          <Form onSubmit={onSubmitHandler}>
+            <Form.Group className="mb-3" controlId="formGroupEmail">
+              <Form.Label>Email address</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Enter email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formGroupPassword">
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Form.Group>
+            <Button variant="primary" type="submit">
+              Login
+            </Button>
+          </Form>
+        </Card.Text>
+      </Card.Body>
+    </Card>
   );
 };
 
