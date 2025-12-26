@@ -1,19 +1,18 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const token = localStorage.getItem("token");
-
-const config = {
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-  },
-};
-
 export const createOrder = createAsyncThunk(
   "order/createOrder",
   async (order, { getState, rejectWithValue }) => {
     try {
+      const token = localStorage.getItem("token");
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
       if (!token) {
         return rejectWithValue(`No token found , please login!`);
       }
@@ -39,6 +38,15 @@ export const createOrder = createAsyncThunk(
 export const getOrderDetails = createAsyncThunk(
   "/order/getOrderDetails",
   async (id, { rejectWithValue }) => {
+    const token = localStorage.getItem("token");
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
     if (!token) {
       return rejectWithValue(`No token found , please login!`);
     }
@@ -58,6 +66,14 @@ export const getOrderDetails = createAsyncThunk(
 export const payOrder = createAsyncThunk(
   "/order/payOrder",
   async ({ orderId, paymentResult }, { getState, rejectWithValue }) => {
+    const token = localStorage.getItem("token");
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
     try {
       console.log("Sending Pay Request for ID:", orderId);
 
@@ -77,6 +93,14 @@ export const listMyOrders = createAsyncThunk(
   "order/listMyOrders",
   async (_, { rejectWithValue }) => {
     try {
+      const token = localStorage.getItem("token");
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
       const { data } = await axios.get(
         `http://localhost:5001/api/order/myorders`,
         config
@@ -98,6 +122,7 @@ const orderSlice = createSlice({
     successPay: false,
     loadingPay: false,
     orders: [],
+    isOrdersLoading: false,
   },
   reducers: {
     resetOrder: (state) => {
@@ -147,16 +172,16 @@ const orderSlice = createSlice({
     });
 
     builder.addCase(listMyOrders.pending, (state, action) => {
-      state.loading = true;
+      state.isOrdersLoading = true;
     });
 
     builder.addCase(listMyOrders.fulfilled, (state, action) => {
-      state.loading = false;
+      state.isOrdersLoading = false;
       state.orders = action.payload;
     });
 
     builder.addCase(listMyOrders.rejected, (state, action) => {
-      state.loading = false;
+      state.isOrdersLoading = false;
       state.error = action.payload;
     });
   },
